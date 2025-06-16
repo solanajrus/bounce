@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bouncing Word</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            background: #ffffff;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'Courier New', monospace;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .header-box {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #000000;
+            padding: 10px 20px;
+            border: 2px solid #000000;
+            font-size: 14px;
+            font-weight: normal;
+            color: #ffffff;
+            z-index: 100;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        .center-text {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 16px;
+            color: #000000;
+            text-align: center;
+            line-height: 1.6;
+            max-width: 600px;
+            z-index: 50;
+            letter-spacing: 0.5px;
+        }
+
+        .bouncing-word {
+            position: absolute;
+            font-size: 24px;
+            font-weight: normal;
+            color: #000000;
+            user-select: none;
+            cursor: default;
+            letter-spacing: 1px;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+    <div class="header-box">CA: D8fRNf36TbgjFiCX4E2DHLLTLfpcgPRgDAVX6oXfMpj2</div>
+    
+    <div class="center-text">
+        I've come to realize that everything that I like most in this world simply "bounces".<br><br>
+        Charts. Boobies. Ass. Basketballs. Golf balls. You name it.<br><br>
+        I just love the bounce.
+    </div>
+
+    <script>
+        const words = [];
+        const numWords = 8;
+        const colors = ['#000000', '#333333', '#666666', '#999999', '#444444', '#555555', '#777777', '#222222'];
+
+        // Create bouncing words
+        for (let i = 0; i < numWords; i++) {
+            const wordElement = document.createElement('div');
+            wordElement.className = 'bouncing-word';
+            wordElement.textContent = 'bounce';
+            document.body.appendChild(wordElement);
+
+            const word = {
+                element: wordElement,
+                x: Math.random() * (window.innerWidth - 100),
+                y: Math.random() * (window.innerHeight - 100),
+                dx: (Math.random() - 0.5) * 4 + (Math.random() > 0.5 ? 2 : -2),
+                dy: (Math.random() - 0.5) * 4 + (Math.random() > 0.5 ? 2 : -2),
+                colorIndex: i % colors.length
+            };
+
+            word.element.style.color = colors[word.colorIndex];
+            word.element.style.left = word.x + 'px';
+            word.element.style.top = word.y + 'px';
+            
+            words.push(word);
+        }
+
+        function animate() {
+            words.forEach(word => {
+                // Update position
+                word.x += word.dx;
+                word.y += word.dy;
+
+                // Bounce off walls
+                if (word.x <= 0 || word.x >= window.innerWidth - 80) {
+                    word.dx = -word.dx;
+                    word.colorIndex = (word.colorIndex + 1) % colors.length;
+                    word.element.style.color = colors[word.colorIndex];
+                }
+                if (word.y <= 0 || word.y >= window.innerHeight - 30) {
+                    word.dy = -word.dy;
+                    word.colorIndex = (word.colorIndex + 1) % colors.length;
+                    word.element.style.color = colors[word.colorIndex];
+                }
+
+                // Keep in bounds
+                word.x = Math.max(0, Math.min(word.x, window.innerWidth - 80));
+                word.y = Math.max(0, Math.min(word.y, window.innerHeight - 30));
+
+                // Apply position
+                word.element.style.left = word.x + 'px';
+                word.element.style.top = word.y + 'px';
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        // Start animation immediately
+        animate();
+    </script>
+</body>
+</html>
